@@ -133,6 +133,7 @@ public class MovieListController extends ListController implements IController {
 					Intent nextActivity = new Intent(view.getContext(), MovieDetailsActivity.class);
 					nextActivity.putExtra(ListController.EXTRA_MOVIE, movie);
 					mActivity.startActivity(nextActivity);
+					addToNotificationBar();
 				}
 			});
 			mList.setOnKeyListener(new ListControllerOnKeyListener<Movie>());
