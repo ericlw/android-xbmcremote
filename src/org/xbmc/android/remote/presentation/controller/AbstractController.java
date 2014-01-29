@@ -90,8 +90,8 @@ public abstract class AbstractController {
 
         Intent intent = new Intent(
                 "org.xbmc.android.remote.presentation.controller");
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-                intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(context.NOTIFICATION_SERVICE);
@@ -102,6 +102,7 @@ public abstract class AbstractController {
                 .setContentTitle("Today's Empire State Building colors")
                 .setContentText("Now Playing")
                 .setSmallIcon(R.drawable.icon)
+                .setAutoCancel(false)
                 .addAction(android.R.drawable.ic_media_rew, "reverse",
                         contentIntent)
                 .addAction(android.R.drawable.ic_media_play, "play", contentIntent)
@@ -109,7 +110,7 @@ public abstract class AbstractController {
                 .setContentIntent(pendingIntent).build();
         
         n.flags = Notification.FLAG_NO_CLEAR;
-        n.flags = Notification.FLAG_ONGOING_EVENT;
+        //n.flags = Notification.FLAG_ONGOING_EVENT;
         
         notificationManager.notify(0, n);   
     }
