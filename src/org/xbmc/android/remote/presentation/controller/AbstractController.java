@@ -26,6 +26,7 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
 import org.apache.http.HttpException;
+import org.xbmc.android.remote.R;
 import org.xbmc.android.remote.business.Command;
 import org.xbmc.android.remote.presentation.activity.HostSettingsActivity;
 import org.xbmc.android.remote.presentation.activity.SettingsActivity;
@@ -37,9 +38,14 @@ import org.xbmc.httpapi.NoNetworkException;
 import org.xbmc.httpapi.NoSettingsException;
 import org.xbmc.httpapi.WrongDataFormatException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
@@ -54,6 +60,7 @@ import android.widget.Toast;
  * 
  * @author Team XBMC
  */
+@SuppressLint("NewApi")
 public abstract class AbstractController {
 	
 	public static final int MAX_WAIT_FOR_WIFI = 20;
@@ -73,6 +80,39 @@ public abstract class AbstractController {
 		HostFactory.readHost(activity.getApplicationContext());
 		//ClientFactory.resetClient(HostFactory.host);
 	}
+	
+	protected void addToNotificationBar(Context context) {
+        Intent notificationIntent = new Intent(
+                "org.xbmc.android.remote.presentation.controller");
+        //notificationIntent.putExtra("share", "share");
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+                notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intent = new Intent(
+                "org.xbmc.android.remote.presentation.controller");
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+                intent, PendingIntent.FLAG_ONE_SHOT);
+
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(context.NOTIFICATION_SERVICE);
+
+        Notification n = new Notification.Builder(
+                context.getApplicationContext())
+                .setTicker(context.getResources().getString(R.string.app_name))
+                .setContentTitle("Today's Empire State Building colors")
+                .setContentText("Now Playing")
+                .setSmallIcon(R.drawable.icon)
+                .addAction(android.R.drawable.ic_media_rew, "reverse",
+                        contentIntent)
+                .addAction(android.R.drawable.ic_media_play, "play", contentIntent)
+                .addAction(android.R.drawable.ic_media_ff, "forward", contentIntent)
+                .setContentIntent(pendingIntent).build();
+        
+        n.flags = Notification.FLAG_NO_CLEAR;
+        n.flags = Notification.FLAG_ONGOING_EVENT;
+        
+        notificationManager.notify(0, n);   
+    }
 	
 	public void onWrongConnectionState(int state, final INotifiableManager manager, final Command<?> source) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);

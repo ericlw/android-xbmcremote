@@ -133,7 +133,7 @@ public class MovieListController extends ListController implements IController {
 					Intent nextActivity = new Intent(view.getContext(), MovieDetailsActivity.class);
 					nextActivity.putExtra(ListController.EXTRA_MOVIE, movie);
 					mActivity.startActivity(nextActivity);
-					addToNotificationBar();
+					
 				}
 			});
 			mList.setOnKeyListener(new ListControllerOnKeyListener<Movie>());
@@ -141,35 +141,7 @@ public class MovieListController extends ListController implements IController {
 		}
 	}
 	
-	private void addToNotificationBar() {
-		Intent notificationIntent = new Intent(
-				"org.xbmc.android.remote.presentation.controller");
-		//notificationIntent.putExtra("share", "share");
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-				notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-		Intent intent = new Intent(
-				"org.xbmc.android.remote.presentation.controller");
-		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
-				intent, PendingIntent.FLAG_ONE_SHOT);
-
-		NotificationManager notificationManager = (NotificationManager) context
-				.getSystemService(context.NOTIFICATION_SERVICE);
-
-		Notification n = new Notification.Builder(
-				context.getApplicationContext())
-				.setTicker(context.getResources().getString(R.string.app_name))
-				.setContentTitle("Today's Empire State Building colors")
-				.setContentText("Now Playing")
-				.addAction(android.R.drawable.ic_media_rew, "Share",
-						contentIntent)
-				.addAction(android.R.drawable.ic_media_pause, "", contentIntent)
-				.addAction(R.drawable.remote_xbox_stop_up, "", contentIntent)
-				.setContentIntent(pendingIntent).build();
-		n.flags = Notification.FLAG_NO_CLEAR;
-
-		notificationManager.notify(0, n);
-	}
+	
 	private void fetch() {
 		final String title = mActor != null ? mActor.name + " - " : mGenre != null ? mGenre.name + " - " : "" + "Movies";
 		DataResponse<ArrayList<Movie>> response = new DataResponse<ArrayList<Movie>>() {

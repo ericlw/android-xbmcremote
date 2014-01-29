@@ -39,6 +39,7 @@ import org.xbmc.eventclient.ButtonCodes;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -471,6 +472,16 @@ public class RemoteController extends AbstractController implements INotifiableC
 				Log.d(TAG, "onTouch - ACTION_UP");
 				v.playSoundEffect(AudioManager.FX_KEY_CLICK);
 				mEventClientManager.sendButton("R1", mAction, false, false, true, (short)0, (byte)0);
+				if(mAction.contentEquals("play"))
+				{
+				    addToNotificationBar(mActivity);
+				}
+				else if(mAction.contentEquals("stop"))
+				{
+				    NotificationManager notificationManager = (NotificationManager) mActivity
+				                    .getSystemService(mActivity.NOTIFICATION_SERVICE);
+				    notificationManager.cancel(0);
+				}
 				
 				if (tmrKeyPress != null) {
 					tmrKeyPress.cancel();						
